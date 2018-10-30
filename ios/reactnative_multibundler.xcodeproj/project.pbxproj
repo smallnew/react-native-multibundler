@@ -39,6 +39,8 @@
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		8E470FFD2175930E0088F57C /* index.ios.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 8E470FD62175930D0088F57C /* index.ios.bundle */; };
 		8E470FFE2175930E0088F57C /* platform.ios.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 8E470FFC2175930D0088F57C /* platform.ios.bundle */; };
+		8EC528A9218737AB00BC16B2 /* index2.ios.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 8EC52883218737AB00BC16B2 /* index2.ios.bundle */; };
+		8EC528AB218739C300BC16B2 /* MainScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8EC528AA218739C300BC16B2 /* MainScreen.xib */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 /* End PBXBuildFile section */
 
@@ -347,6 +349,8 @@
 		8E470FD62175930D0088F57C /* index.ios.bundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = index.ios.bundle; sourceTree = "<group>"; };
 		8E470FFC2175930D0088F57C /* platform.ios.bundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = platform.ios.bundle; sourceTree = "<group>"; };
 		8E47100F217597930088F57C /* RCTBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RCTBridge.h; path = reactnative_multibundler/RCTBridge.h; sourceTree = "<group>"; };
+		8EC52883218737AB00BC16B2 /* index2.ios.bundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = index2.ios.bundle; sourceTree = "<group>"; };
+		8EC528AA218739C300BC16B2 /* MainScreen.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainScreen.xib; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -486,6 +490,7 @@
 		13B07FAE1A68108700A75B9A /* reactnative_multibundler */ = {
 			isa = PBXGroup;
 			children = (
+				8EC52883218737AB00BC16B2 /* index2.ios.bundle */,
 				8E47100F217597930088F57C /* RCTBridge.h */,
 				8E470FD62175930D0088F57C /* index.ios.bundle */,
 				8E470FFC2175930D0088F57C /* platform.ios.bundle */,
@@ -496,6 +501,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				8EC528AA218739C300BC16B2 /* MainScreen.xib */,
 			);
 			name = reactnative_multibundler;
 			sourceTree = "<group>";
@@ -1057,6 +1063,8 @@
 			files = (
 				8E470FFD2175930E0088F57C /* index.ios.bundle in Resources */,
 				8E470FFE2175930E0088F57C /* platform.ios.bundle in Resources */,
+				8EC528AB218739C300BC16B2 /* MainScreen.xib in Resources */,
+				8EC528A9218737AB00BC16B2 /* index2.ios.bundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);

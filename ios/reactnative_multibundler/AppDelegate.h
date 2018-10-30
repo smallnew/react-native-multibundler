@@ -11,4 +11,7 @@
 
 @property (nonatomic, strong) UIWindow *window;
 
+- (void)goBuz1:(UIButton *)button;
+- (void)goBuz2:(UIButton *)button;
+
 @end
