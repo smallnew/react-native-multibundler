@@ -16,6 +16,8 @@ iOS和Android都有加载多bundle实例，经测试稳定可靠
 
      3、直接运行android或iOS项目，jsbundle包已经事先打好
      
+<img src="https://github.com/smallnew/react-native-multibundler/raw/master/demo.gif" width="250" alt="Demo Android"></img>
+     
 ### js项目结构：
 
 ```
