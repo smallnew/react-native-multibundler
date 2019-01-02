@@ -1,10 +1,11 @@
+const pathSep = require('path').sep;
 function postProcessModulesFilter(module) {
     const projectRootPath = __dirname;
     if(module['path'].indexOf('__prelude__')>=0){
         return false;
     }
-    if(module['path'].indexOf('/node_modules/')>0){
-        if('js/script/virtual'==module['output'][0]['type']){
+    if(module['path'].indexOf(pathSep+'node_modules'+pathSep)>0){
+        if('js'+pathSep+'script'+pathSep+'virtual'==module['output'][0]['type']){
             return true;
         }
         return false;
@@ -17,14 +18,14 @@ function createModuleIdFactory() {
     return path => {
         //console.log('path ',path);
         let name = '';
-        if(path.indexOf('node_modules/react-native/Libraries/')>0){
-            name = path.substr(path.lastIndexOf('/')+1);
+        if(path.indexOf('node_modules'+pathSep+'react-native'+pathSep+'Libraries'+pathSep)>0){
+            name = path.substr(path.lastIndexOf(pathSep)+1);
         }else if(path.indexOf(projectRootPath)==0){
             name = path.substr(projectRootPath.length+1);
         }
         name = name.replace('.js','');
         name = name.replace('.png','');
-        name = name.replace(new RegExp("/","gm"),'_');
+        name = name.replace(new RegExp(pathSep,"gm"),'_');
         return name;
     };
 }

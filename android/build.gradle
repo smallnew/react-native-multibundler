@@ -11,12 +11,7 @@ buildscript {
     repositories {
         jcenter()
         mavenLocal()
-        maven {
-            url "http://mvnrepo.alibaba-inc.com/mvn/repository"
-        }
-        maven {
-            url 'http://maven.aliyun.com/nexus/content/repositories/releases/'
-        }
+        google()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.4'
@@ -34,12 +29,7 @@ allprojects {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url "$rootDir/../node_modules/react-native/android"
         }
-        maven {
-            url "http://mvnrepo.alibaba-inc.com/mvn/repository"
-        }
-        maven {
-            url 'http://maven.aliyun.com/nexus/content/repositories/releases/'
-        }
+        google()
     }
 }
 
