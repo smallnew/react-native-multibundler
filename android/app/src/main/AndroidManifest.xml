@@ -24,6 +24,7 @@
 
         <activity android:name=".demo.Buz1Activity" />
         <activity android:name=".demo.Buz2Activity" />
+        <activity android:name=".demo.Buz3Activity" />
 
     </application>
 
