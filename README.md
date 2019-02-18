@@ -24,16 +24,21 @@ iOS和Android都有加载多bundle实例，经测试稳定可靠
 .
 ├── App.js               业务界面1
 ├── App2.js              业务界面2
+├── App3.js              业务界面3
 ├── LICENSE
 ├── README.md
 ├── android              android项目目录
 ├── app.json 
 ├── buz57.config.js      业务包的打包配置
+├── buz-ui.config.js     UI打业务包配置
 ├── index.js             业务1入口js
 ├── index2.js            业务2入口js
+├── index3.js            业务3入口js
 ├── ios ios目录
 ├── multibundler_cmd.txt 打包命令
 ├── package.json
+├── platform-ui.config.js UI打基础包配置
+├── platformDep-ui.js    UI打基础包入口
 ├── platform57.config.js 基础包打包配置
 ├── platformDep.js       基础包打包入口
 └── platformEmptyDefaultExport.js 基础包补丁
@@ -111,6 +116,12 @@ iOS和Android都有加载多bundle实例，经测试稳定可靠
     
     RCTRootView* view = [[RCTRootView alloc] initWithBridge:bridge moduleName:moduleName initialProperties:nil];
     
+
+### UI打包(现在只支持mac os，windows后续推出)：
+     使用方式：点击package-ui-bin/react-native_multibundler_ui-darwin-x64/react-native_multibundler_ui.app
+     选择打包选项后点击打包,该方法可代替命令打包并帮助计算业务包依赖并去重
+<img src="https://github.com/smallnew/react-native-multibundler/raw/master/package-ui-demo.png" width="650" alt="Demo Android"></img>
+
 
 打包命令如下：
 ## android
