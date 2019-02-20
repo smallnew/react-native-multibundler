@@ -41,7 +41,8 @@ function createModuleIdFactory() {
     }
     name = name.replace('.js','');
     name = name.replace('.png','');
-    name = name.replace(new RegExp(pathSep,"gm"),'_');
+    let regExp = pathSep=='\\'?new RegExp('\\\\',"gm"):new RegExp(pathSep,"gm");
+    name = name.replace(regExp,'_');//把path中的/换成下划线
     return name;
   };
 }
