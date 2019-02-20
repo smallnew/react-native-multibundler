@@ -117,8 +117,8 @@ iOS和Android都有加载多bundle实例，经测试稳定可靠
     RCTRootView* view = [[RCTRootView alloc] initWithBridge:bridge moduleName:moduleName initialProperties:nil];
     
 
-### UI打包(现在只支持mac os，windows后续推出)：
-     使用方式：点击package-ui-bin/react-native_multibundler_ui-darwin-x64/react-native_multibundler_ui.app
+### UI打包(现在支持mac os，windows)：
+     使用方式：到package-ui-bin目录解压需要的平台打包工具，双击解压后的可执行文件
      选择打包选项后点击打包,该方法可代替命令打包并帮助计算业务包依赖并去重
 <img src="https://github.com/smallnew/react-native-multibundler/raw/master/package-ui-demo.png" width="650" alt="Demo Android"></img>
 
