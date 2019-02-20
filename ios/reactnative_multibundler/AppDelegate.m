@@ -20,6 +20,7 @@
   BOOL isBuzLoaded;
   BOOL isBuz1Loaded;
   BOOL isBuz2Loaded;
+  BOOL isBuz3Loaded;
 }
 @end
 
@@ -41,8 +42,10 @@
   [self.window makeKeyAndVisible];
   UIButton* buz1 = [mainViewController.view viewWithTag:101];
   UIButton* buz2 = [mainViewController.view viewWithTag:91];
+  UIButton* buz3 = [mainViewController.view viewWithTag:123];
   [buz1 addTarget:self action:@selector(goBuz1:) forControlEvents:UIControlEventTouchUpInside];
   [buz2 addTarget:self action:@selector(goBuz2:) forControlEvents:UIControlEventTouchUpInside];
+  [buz3 addTarget:self action:@selector(goBuz3:) forControlEvents:UIControlEventTouchUpInside];
   //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadBuzBundle) name:@"RCTJavaScriptDidLoadNotification" object:nil];//如果只是要进入app立马加载rn可以用该方法
   return YES;
 }
@@ -57,10 +60,16 @@
   isBuz2Loaded = YES;
 }
 
+-(void)goBuz3:(UIButton *)button{
+  [self gotoBuzWithModuleName:@"reactnative_multibundler3" bundleName:@"index3.ios"];
+  isBuz3Loaded = YES;
+}
+
 -(void) gotoBuzWithModuleName:(NSString*)moduleName bundleName:(NSString*)bundleName{
   BOOL isBundleLoaded = NO;
   if((isBuz1Loaded&&[bundleName isEqualToString:@"index.ios"])
-     ||(isBuz2Loaded&&[bundleName isEqualToString:@"index2.ios"])){
+     ||(isBuz2Loaded&&[bundleName isEqualToString:@"index2.ios"])
+     ||(isBuz3Loaded&&[bundleName isEqualToString:@"index3.ios"])){
     isBundleLoaded = YES;
   }
   if(isBundleLoaded==NO){
