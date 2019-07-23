@@ -1,4 +1,8 @@
 const pathSep = require('path').sep;
+const fs=require("fs");
+const moduleMapDir = "moduleMap";
+const platfromMapName = "platformMapping.json";
+const platfromNameArray = [];
 
 function createModuleIdFactory() {
   const projectRootPath = __dirname;//获取命令行执行的目录，__dirname是nodejs提供的变量
@@ -13,7 +17,13 @@ function createModuleIdFactory() {
     name = name.replace('.png', '');
     let regExp = pathSep == '\\' ? new RegExp('\\\\', "gm") : new RegExp(pathSep, "gm");
     name = name.replace(regExp, '_');//把path中的/换成下划线
-
+    platfromNameArray.push(name);
+    const platformMapDir = projectRootPath+pathSep+moduleMapDir;
+    if(!fs.existsSync(platformMapDir)){
+      fs.mkdirSync(platformMapDir);
+    }
+    const platformMapPath = projectRootPath+pathSep+moduleMapDir+pathSep+platfromMapName;
+    fs.writeFileSync(platformMapPath,JSON.stringify(platfromNameArray));
     return name;
   };
 }

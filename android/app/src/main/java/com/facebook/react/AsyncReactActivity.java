@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 /**
  * 异步加载业务bundle的activity
  */
-public abstract class AsyncReactActivity extends Activity
+public abstract class AsyncReactActivity extends androidx.fragment.app.FragmentActivity
         implements DefaultHardwareBackBtnHandler, PermissionAwareActivity {
 
     public enum ScriptType {ASSET,FILE}
