@@ -15,4 +15,4 @@ node ./node_modules/react-native/local-cli/cli.js bundle --platform ios --dev fa
 
 node ./node_modules/react-native/local-cli/cli.js bundle --platform android --dev false --entry-file platformDep.js --bundle-output ./android/app/src/main/assets/platform.android.bundle --assets-dest android/app/src/main/res/ --config /Users/wangeuipeng/Documents/GitHub/react-native-multibundler/platform57.config.js
 
-node ./node_modules/react-native/local-cli/cli.js bundle --platform ios --dev false --entry-file platformDep.js --bundle-output ./ios/platform.ios.bundle --assets-dest ./ios/ --config /Users/wangeuipeng/Documents/GitHub/react-native-multibundler/platform57.config.js
+node ./node_modules/react-native/local-cli/cli.js bundle --platform ios --dev false --entry-file ../platformDep.js --bundle-output ./ios/platform.ios.bundle --assets-dest ./ios/ --config /Users/wangeuipeng/Documents/GitHub/react-native-multibundler/multibundler/platform.config.js

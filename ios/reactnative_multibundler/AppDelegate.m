@@ -23,13 +23,18 @@
   BOOL isBuz3Loaded;
 }
 @end
+static const BOOL MULTI_DEBUG = NO;//如果画要调试，需设置成YES
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   NSURL *jsCodeLocation;
-  jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"platform.ios" withExtension:@"bundle"];
+  if(MULTI_DEBUG){
+    jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"MultiDenugEntry" fallbackResource:nil];
+  }else{
+    jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"platform.ios" withExtension:@"bundle"];
+  }
   bridge = [[RCTBridge alloc] initWithBundleURL:jsCodeLocation
                                  moduleProvider:nil
                                   launchOptions:launchOptions];
@@ -67,6 +72,9 @@
 
 -(void) gotoBuzWithModuleName:(NSString*)moduleName bundleName:(NSString*)bundleName{
   BOOL isBundleLoaded = NO;
+  if(MULTI_DEBUG){
+    isBundleLoaded = YES;
+  }
   if((isBuz1Loaded&&[bundleName isEqualToString:@"index.ios"])
      ||(isBuz2Loaded&&[bundleName isEqualToString:@"index2.ios"])
      ||(isBuz3Loaded&&[bundleName isEqualToString:@"index3.ios"])){

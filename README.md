@@ -1,10 +1,12 @@
 # react-native-multibundler
 基于react native的metro bundler的配置化开发来处理分包，支持iOS和Android，metro bundler为官方打包的工具，使用官方分包方法更灵活稳定，比网上的一些方法更实用可靠。
 
+现在更新到v2.1版本，该版本修复了基础包过滤不精确的问题、并支持debug
+
 metro官方：https://facebook.github.io/metro/
 
 
-支持react native 0.57~0.58，0.59预发版本也支持，等0.59正式发布后再做兼容性测试，同样适用与0.56版本，但由于0.55版本的打包配置还不完善，暂不支持0.55版本
+支持react native 0.57~0.60，由于采用的是官方metro拆包，理论上日后的rn版本无需修改就能兼容
 
 iOS和Android都有加载多bundle实例，经测试稳定可靠
 
@@ -18,56 +20,6 @@ iOS和Android都有加载多bundle实例，经测试稳定可靠
      
 <img src="https://github.com/smallnew/react-native-multibundler/raw/master/demo.gif" width="250" alt="Demo Android"></img>
      
-### js项目结构：
-
-```
-.
-├── App.js               业务界面1
-├── App2.js              业务界面2
-├── App3.js              业务界面3
-├── LICENSE
-├── README.md
-├── android              android项目目录
-├── app.json 
-├── buz57.config.js      业务包的打包配置
-├── buz-ui.config.js     UI打业务包配置
-├── index.js             业务1入口js
-├── index2.js            业务2入口js
-├── index3.js            业务3入口js
-├── ios ios目录
-├── multibundler_cmd.txt 打包命令
-├── package.json
-├── platform-ui.config.js UI打基础包配置
-├── platformDep-ui.js    UI打基础包入口
-├── platform57.config.js 基础包打包配置
-├── platformDep.js       基础包打包入口
-└── platformEmptyDefaultExport.js 基础包补丁
-```
-### android目录结构
-```
-.
-├── AndroidManifest.xml
-├── assets
-│   ├── index.android.bundle   业务包
-│   ├── index2.android.bundle  
-│   └── platform.android.bundle 基础包
-└── java
-    └── com
-        ├── facebook
-        │   └── react
-        │       ├── AsyncReactActivity.java 重要！rn业务加载入口，业务activity重写该类
-        │       ├── ReactUtil.java
-        │       └── bridge
-        └── reactnative_multibundler
-            ├── FileUtils.java
-            ├── ScriptLoadUtil.java
-            └── demo   demo目录，集成项目可删除
-                ├── Buz1Activity.java
-                ├── Buz2Activity.java
-                ├── MainActivity.java
-                └── MainApplication.java
-```
-
 
 ### 如何接入原有项目：
 #### android
@@ -116,6 +68,75 @@ iOS和Android都有加载多bundle实例，经测试稳定可靠
     
     RCTRootView* view = [[RCTRootView alloc] initWithBridge:bridge moduleName:moduleName initialProperties:nil];
     
+
+### DEBUG
+```
+从2.1版本之后加入了debug调试功能，主要工作原理：将需要debug的业务模块代码复制到debug入口文件MultiDebugEntry.js中，然后在原生端加载该入口文件来调试；
+使用步骤：
+1、配置需要调试的业务入口文件DegbugBuzEntrys.json，在这个json数组中加入业务入口js文件相对主工程的相对路径
+2、在Android中的ScriptLoadUtil.java中的MULTI_DEBUG变量设置成true，或者在iOS中将MULTI_DEBUG设置为true
+3、主工程目录下执行：node multiDebug.js
+4、启动你的原生app，开始调试
+
+```
+
+### js项目结构：
+
+```
+.
+├── App.js               业务界面1
+├── App2.js              业务界面2
+├── App3.js              业务界面3
+├── LICENSE
+├── README.md
+├── android              android项目目录
+├── app.json 
+├── buzDep.json        UI打包中，打业务包的中间产物，这里面包含的是当前业务包的依赖
+├── buz.config.js      业务包的打包配置
+├── buz-ui.config.js     UI打业务包配置
+├── index.js             业务1入口js
+├── index2.js            业务2入口js
+├── index3.js            业务3入口js
+├── ios ios目录
+├── multibundler         包含着debug配置和公用方法模块
+├── multiDebug.js        debug node命令行工具
+├── multiDebugEntry.js   debug生成的rn调试入口，里面拼接着需要调试模块的入口代码     
+├── multibundler_cmd.txt 打包命令
+├── package.json
+├── platform-ui.config.js UI打基础包配置
+├── platformDep-ui.js    UI打基础包入口
+├── platform.config.js 基础包打包配置
+├── platformDep.js       基础包打包入口
+├── platform-import.js   UI打包中生成的基础包依赖的模块import代码
+└── platformDep.json     UI打包中生成的基础包所依赖模块的配置文件
+```
+### android目录结构
+```
+.
+├── AndroidManifest.xml
+├── assets
+│   ├── index.android.bundle   业务包
+│   ├── index2.android.bundle  
+│   └── platform.android.bundle 基础包
+└── java
+    └── com
+        ├── facebook
+        │   └── react
+        │       ├── AsyncReactActivity.java 重要！rn业务加载入口，业务activity重写该类
+        │       ├── ReactUtil.java
+        │       └── bridge
+        └── reactnative_multibundler
+            ├── FileUtils.java
+            ├── ScriptLoadUtil.java
+            └── demo   demo目录，集成项目可删除
+                ├── Buz1Activity.java
+                ├── Buz2Activity.java
+                ├── MainActivity.java
+                └── MainApplication.java
+```
+
+
+
 
 ### UI打包(现在支持mac os，windows)：
      使用方式：到package-ui-bin目录解压需要的平台打包工具，双击解压后的可执行文件

@@ -19,9 +19,12 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
+
 public class ScriptLoadUtil {
     protected final static String TAG = "ScriptLoadUtil";
     public static final String REACT_DIR = "react_bundles";
+    /** set this value when debug,you can set BuildConfig.DEBUG if need*/
+    public static final boolean MULTI_DEBUG = false;//需要debug的时候设置成true,你也可以设置成跟BuildConfig.DEBUG一致
     private static Set<String> sLoadedScript = new HashSet<>();
 
     public static void recreateReactContextInBackgroundInner(ReactInstanceManager manager) {

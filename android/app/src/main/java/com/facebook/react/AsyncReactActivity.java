@@ -7,7 +7,6 @@
 
 package com.facebook.react;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -18,6 +17,7 @@ import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.modules.core.PermissionAwareActivity;
 import com.facebook.react.modules.core.PermissionListener;
 import com.reactnative_multibundler.ScriptLoadUtil;
+import com.reactnative_multibundler.demo.MainApplication;
 
 
 import java.io.File;
@@ -80,6 +80,10 @@ public abstract class AsyncReactActivity extends androidx.fragment.app.FragmentA
     protected abstract ScriptType getScriptPathType();
 
     protected void loadScript(){
+        /** all buz module is loaded when in debug mode*/
+        if(ScriptLoadUtil.MULTI_DEBUG){//当设置成debug模式时，所有需要的业务代码已经都加载好了
+            return;
+        }
         ScriptType pathType = getScriptPathType();
         String scriptPath = getScriptPath();
         CatalystInstance instance = ScriptLoadUtil.getCatalystInstance(getReactNativeHost());
