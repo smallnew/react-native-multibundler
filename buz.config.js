@@ -1,6 +1,7 @@
 const pathSep = require('path').sep;
 const plaformModules = require('./multibundler/platformMapping.json');
 const getModuleId = require('./multibundler/getModulelId').getModuleId;
+let entry;
 
 function postProcessModulesFilter(module) {
   const projectRootPath = __dirname;
@@ -31,17 +32,23 @@ function postProcessModulesFilter(module) {
 function createModuleIdFactory() {
   const projectRootPath = __dirname;
   return path => {
-    let name = getModuleId(projectRootPath,path);
+    let name = getModuleId(projectRootPath,path,entry,true);
     return name;
   };
 }
 
+function getModulesRunBeforeMainModule(entryFilePath) {
+  console.log('entryFilePath',entryFilePath);
+  entry = entryFilePath;
+  return [];
+}
 
 module.exports = {
 
   serializer: {
     createModuleIdFactory: createModuleIdFactory,
-    processModuleFilter: postProcessModulesFilter
+    processModuleFilter: postProcessModulesFilter,
+    getModulesRunBeforeMainModule:getModulesRunBeforeMainModule
     /* serializer options */
   }
 };

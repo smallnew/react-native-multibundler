@@ -1,7 +1,7 @@
 # react-native-multibundler
 基于react native的metro bundler的配置化开发来处理分包，支持iOS和Android，metro bundler为官方打包的工具，使用官方分包方法更灵活稳定，比网上的一些方法更实用可靠。
 
-现在更新到v2.1版本，该版本修复了基础包过滤不精确的问题、并支持debug
+支持debug、可选模块路径或者递增id作为模块id
 
 metro官方：https://facebook.github.io/metro/
 
@@ -78,6 +78,26 @@ iOS和Android都有加载多bundle实例，经测试稳定可靠
 3、主工程目录下执行：node multiDebug.js
 4、启动你的原生app，开始调试
 
+```
+
+### 模块ID
+```
+从2.2版本之后加入了递增index作为模块id的选项。
+使用步骤：
+1、该选项的开关在getModulelId.js文件中的useIndex，设置为true就能开启递增index作为moduleId的功能
+2、配置ModuleIdConfig.json文件，格式为 入口文件js:起始的moduleId，如下：
+{
+  "index.js":100000,
+  "index2.js":200000,
+  "index3.js":300000
+}
+基础包的moduleId是固定从0开始，因此业务包的moduleId起始值建议从100000开始，以防止和基础重复
+不同业务包的起始moduleId也要避免重复
+3、执行打包命令或者使用UI打包，multibundler目录下会生成platformMap.json、indexMap.json等模块对应的ID映射表，用于后续模块id增量打包
+使用递增index作为moduleId的好处：
+1、比路径名作为moduleId更短，减小包大小
+2、打包后模块名得到保护
+3、可以使用debug模式打包，即打包命令中--dev可以为true,方便调试
 ```
 
 ### js项目结构：

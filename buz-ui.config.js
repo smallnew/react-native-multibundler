@@ -3,6 +3,7 @@ const buzDeps = require('./buzDep');
 const noFilterModules = buzDeps;
 const plaformModules = require('./multibundler/platformMapping.json');
 const getModuleId = require('./multibundler/getModulelId').getModuleId;
+let entry;
 
 function packageToBundle(path){
   for(let i=0;i<noFilterModules.length;i++) {
@@ -46,17 +47,23 @@ function postProcessModulesFilter(module) {//返回false则过滤不编译
 function createModuleIdFactory() {
   const projectRootPath = __dirname;
   return path => {
-    let name = getModuleId(projectRootPath,path);
+    let name = getModuleId(projectRootPath,path,entry,true);
     return name;
   };
 }
 
+function getModulesRunBeforeMainModule(entryFilePath) {
+  console.log('entryFilePath',entryFilePath);
+  entry = entryFilePath;
+  return [];
+}
 
 module.exports = {
 
   serializer: {
     createModuleIdFactory:createModuleIdFactory,
-    processModuleFilter:postProcessModulesFilter
+    processModuleFilter:postProcessModulesFilter,
+    getModulesRunBeforeMainModule:getModulesRunBeforeMainModule
     /* serializer options */
   }
 };
