@@ -75,6 +75,7 @@ import com.android.build.OutputFile
 project.ext.react = [
         entryFile: "index.js",
         enableHermes: false,  // clean and rebuild if changing
+        bundleInRelease: false
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
