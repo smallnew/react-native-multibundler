@@ -9,6 +9,7 @@ import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.reactnative_multibundler.BuildConfig;
 import com.reactnative_multibundler.ScriptLoadUtil;
+import com.smallnew.smartassets.RNSmartassetsPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +27,8 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage()
+          new MainReactPackage(),
+              new RNSmartassetsPackage()
       );
     }
 

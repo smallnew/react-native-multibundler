@@ -1,6 +1,7 @@
 package com.reactnative_multibundler.demo;
 
 import com.facebook.react.AsyncReactActivity;
+import com.reactnative_multibundler.RnBundle;
 
 public class Buz2Activity extends AsyncReactActivity {
     /**
@@ -12,14 +13,13 @@ public class Buz2Activity extends AsyncReactActivity {
         return "reactnative_multibundler2";
     }
 
-
     @Override
-    protected String getScriptPath() {
-        return "index2.android.bundle";
+    protected RnBundle getBundle(){
+        RnBundle bundle = new RnBundle();
+        bundle.scriptType = ScriptType.NETWORK;
+        bundle.scriptPath = "index2.android.bundle";
+        bundle.scriptUrl = "https://github.com/smallnew/react-native-multibundler/raw/master/remotebundles/index2.android.bundle.zip";
+        return bundle;
     }
 
-    @Override
-    protected ScriptType getScriptPathType() {
-        return ScriptType.ASSET;
-    }
 }

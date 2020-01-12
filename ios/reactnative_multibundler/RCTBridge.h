@@ -2,8 +2,7 @@
 //  RCTBridge.h
 //  HePmsApp
 //
-//  Created by wangeuipeng on 2018/10/15.
-//  Copyright © 2018年 Facebook. All rights reserved.
+//  Created by smallnew on 2018/10/15.
 //
 
 #import <Foundation/Foundation.h>

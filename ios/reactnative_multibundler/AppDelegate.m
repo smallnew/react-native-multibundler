@@ -11,6 +11,9 @@
 #import <React/RCTRootView.h>
 #import "RCTBridge.h"
 #import <React/RCTBridge+Private.h>
+#import "ScriptLoadUtil.h"
+#import "ReactController.h"
+#import <React/RCTDevSettings.h>
 
 @interface AppDelegate ()
 {
@@ -23,21 +26,25 @@
   BOOL isBuz3Loaded;
 }
 @end
-static const BOOL MULTI_DEBUG = NO;//如果画要调试，需设置成YES
+
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+
+  BOOL debugable = [ScriptLoadUtil isDebugable];
   NSURL *jsCodeLocation;
-  if(MULTI_DEBUG){
+  if(debugable){
     jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"MultiDenugEntry" fallbackResource:nil];
   }else{
     jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"platform.ios" withExtension:@"bundle"];
   }
+
   bridge = [[RCTBridge alloc] initWithBundleURL:jsCodeLocation
                                  moduleProvider:nil
                                   launchOptions:launchOptions];
+  [ScriptLoadUtil init:bridge];
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   mainViewController = [UIViewController new];
   mainViewController.view = [[NSBundle mainBundle] loadNibNamed:@"MainScreen" owner:self options:nil].lastObject;
@@ -56,41 +63,33 @@ static const BOOL MULTI_DEBUG = NO;//如果画要调试，需设置成YES
 }
 
 -(void)goBuz1:(UIButton *)button{
-  [self gotoBuzWithModuleName:@"reactnative_multibundler" bundleName:@"index.ios"];
+  [self gotoBuzWithModuleName:@"reactnative_multibundler" bundleName:@"index.ios.bundle"];
   isBuz1Loaded = YES;
 }
 
 -(void)goBuz2:(UIButton *)button{
-  [self gotoBuzWithModuleName:@"reactnative_multibundler2" bundleName:@"index2.ios"];
+  [self gotoBuzWithModuleName:@"reactnative_multibundler2" bundleName:@"index2.ios.bundle"];
   isBuz2Loaded = YES;
 }
 
 -(void)goBuz3:(UIButton *)button{
-  [self gotoBuzWithModuleName:@"reactnative_multibundler3" bundleName:@"index3.ios"];
+  [self gotoBuzWithModuleName:@"reactnative_multibundler3" bundleName:@"index3.ios.bundle"];
   isBuz3Loaded = YES;
 }
 
 -(void) gotoBuzWithModuleName:(NSString*)moduleName bundleName:(NSString*)bundleName{
   BOOL isBundleLoaded = NO;
-  if(MULTI_DEBUG){
+  if([ScriptLoadUtil isDebugable]){
     isBundleLoaded = YES;
   }
-  if((isBuz1Loaded&&[bundleName isEqualToString:@"index.ios"])
-     ||(isBuz2Loaded&&[bundleName isEqualToString:@"index2.ios"])
-     ||(isBuz3Loaded&&[bundleName isEqualToString:@"index3.ios"])){
-    isBundleLoaded = YES;
+  BundleType type = InApp;
+  NSString* bundleUrl = @"";
+  if([bundleName isEqualToString:@"index2.ios.bundle"]){
+    bundleUrl = @"https://github.com/smallnew/react-native-multibundler/raw/master/remotebundles/index2.ios.bundle.zip";
+    type = NetWork;
   }
-  if(isBundleLoaded==NO){
-      NSURL *jsCodeLocationBuz = [[NSBundle mainBundle] URLForResource:bundleName withExtension:@"bundle"];
-      NSError *error = nil;
-      NSData *sourceBuz = [NSData dataWithContentsOfFile:jsCodeLocationBuz.path
-                                             options:NSDataReadingMappedIfSafe
-                                               error:&error];
-      [bridge.batchedBridge executeSourceCode:sourceBuz sync:NO];
-  }
-  RCTRootView* view = [[RCTRootView alloc] initWithBridge:bridge moduleName:moduleName initialProperties:nil];
-  UIViewController* controller = [UIViewController new];
-  [controller setView:view];
+  UIViewController* controller = nil;
+  controller = [[ReactController alloc] initWithURL:bundleUrl path:bundleName type:type moduleName:moduleName];
   [mainViewController.navigationController pushViewController:controller animated:YES];
 }
 /*

@@ -1,5 +1,6 @@
 package com.reactnative_multibundler;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
@@ -17,17 +18,164 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.lang.ref.WeakReference;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class FileUtils {
+    public static final String PACKAGE_FILE_NAME = "app.json";
+    public static final String PACKAGE_HASH_KEY = "md5";
+    public static final String UNZIPPED_FOLDER_NAME = "unzipped";
+    public static final String FOLDER_RN = "bundles";//目标目录
+    public static final String REACT_NATIVE_FILE = "index.android.bundle";
 
+    public static final String STATUS_FILE = "code_rn.json";
+
+    public static final int DOWNLOAD_BUFFER_SIZE = 1024 * 256;
     private static final int WRITE_BUFFER_SIZE = 1024 * 8;
+    private static WeakReference<Activity> rnActivityRef;
     private static final String TAG = "FileUtils";
+
+    public static final String BUNDLE_DOWNLOADPATH = "bundle-downloaded";//下载目录
+    public static final String RN_NAME = "rnbundle";//临时下载名
+
     public static String appendPathComponent(String basePath, String appendPathComponent) {
         return new File(basePath, appendPathComponent).getAbsolutePath();
     }
+
+    public static void downloadRNBundle(final Context context,final String url,final String md5,final UpdateProgressListener listener){
+        final String downloadPath = context.getFilesDir()+ File.separator+BUNDLE_DOWNLOADPATH;
+        final String fileName = RN_NAME;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean result = true;
+                try {
+                    boolean tmpRet = FileUtils.downloadFile(url, downloadPath, fileName,listener);
+                    if(!tmpRet){
+                        result = false;
+                    }else {
+                        String filePath = downloadPath+ File.separator+fileName;
+                        String successStr = FileUtils.processRnPackage(context, md5, filePath);
+                        if (!"success".equals(successStr)) {
+                            result = false;
+                        }
+                    }
+                }catch (Exception e){
+                    result = false;
+                }finally {
+                    if(listener!=null){
+                        listener.complete(result);
+                    }
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * 下载后的解压操作，这里是没有md5校验的，md5只作为一个目录来使用，实际中请自行添加md5校验
+     * @param context
+     * @param md5 下载的文件的md5，这个可由服务端提供，这里的demo由于没服务端因此只当中目录
+     * @param path 下载完的bundle的路径
+     * @return
+     */
+    public static String processRnPackage(Context context,String md5,String path){
+        String ret = "failed";
+        try {
+            File downloadFile = new File(path);
+            String newUpdateHash = md5;
+            String newUpdateFolderPath = getPackageFolderPath(context, newUpdateHash);
+            String newUpdateMetadataPath = appendPathComponent(newUpdateFolderPath, PACKAGE_FILE_NAME);
+            if (fileAtPathExists(newUpdateFolderPath)) {
+                // This removes any stale data in newPackageFolderPath that could have been left
+                // uncleared due to a crash or error during the download or install process.
+                deleteDirectoryAtPath(newUpdateFolderPath);
+            }
+            // Unzip the downloaded file and then delete the zip
+            String unzippedFolderPath = appendPathComponent(getRNCodePath(context), UNZIPPED_FOLDER_NAME);
+            FileUtils.unzipFile(downloadFile, unzippedFolderPath);
+            FileUtils.deleteFileOrFolderSilently(downloadFile);
+
+            FileUtils.copyDirectoryContents(unzippedFolderPath, newUpdateFolderPath);
+            FileUtils.deleteFileAtPathSilently(unzippedFolderPath);
+            String relativeBundlePath = newUpdateFolderPath;
+            FileUtils.writeStringToFile(md5, appendPathComponent(getRNCodePath(context),STATUS_FILE));//用该文件判断当前最新版本
+            FileUtils.writeStringToFile(md5, newUpdateMetadataPath);
+            ret = "success";
+        }catch (Exception e){
+            Log.e(TAG,"react native 解压bundle失败");
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
+    public static boolean downloadFile(String url,String fileForder,String fileName,UpdateProgressListener listener) throws IOException{
+        String downloadUrlString = url;
+        HttpURLConnection connection = null;
+        BufferedInputStream bin = null;
+        FileOutputStream fos = null;
+        BufferedOutputStream bout = null;
+        File downloadFile = null;
+        boolean result = false;
+        // Download the file while checking if it is a zip and notifying client of progress.
+        try {
+            URL downloadUrl = new URL(downloadUrlString);
+            connection = (HttpURLConnection) (downloadUrl.openConnection());
+            connection.setRequestProperty("Accept-Encoding", "identity");
+            bin = new BufferedInputStream(connection.getInputStream());
+
+            long totalBytes = connection.getContentLength();
+            long receivedBytes = 0;
+
+            File downloadFolder = new File(fileForder);
+            downloadFolder.mkdirs();
+            downloadFile = new File(downloadFolder, fileName);
+            fos = new FileOutputStream(downloadFile);
+            bout = new BufferedOutputStream(fos, DOWNLOAD_BUFFER_SIZE);
+            byte[] data = new byte[DOWNLOAD_BUFFER_SIZE];
+            byte[] header = new byte[4];
+
+            int numBytesRead = 0;
+            while ((numBytesRead = bin.read(data, 0, DOWNLOAD_BUFFER_SIZE)) >= 0) {
+                if (receivedBytes < 4) {
+                    for (int i = 0; i < numBytesRead; i++) {
+                        int headerOffset = (int) (receivedBytes) + i;
+                        if (headerOffset >= 4) {
+                            break;
+                        }
+
+                        header[headerOffset] = data[i];
+                    }
+                }
+
+                receivedBytes += numBytesRead;
+                bout.write(data, 0, numBytesRead);
+                listener.updateProgressChange((int)(receivedBytes*100/totalBytes));
+            }
+
+            if (totalBytes != receivedBytes) {
+                throw new IOException("Received " + receivedBytes + " bytes, expected " + totalBytes);
+            }
+            result = true;
+        } catch (MalformedURLException e) {
+            throw new IOException(downloadUrlString, e);
+        } finally {
+            try {
+                if (bout != null) bout.close();
+                if (fos != null) fos.close();
+                if (bin != null) bin.close();
+                if (connection != null) connection.disconnect();
+            } catch (IOException e) {
+                throw new IOException("Error closing IO resources.", e);
+            }
+        }
+        return result;
+    }
+
     public static void copyDirectoryContents(String sourceDirectoryPath, String destinationDirectoryPath) throws IOException {
         File sourceDir = new File(sourceDirectoryPath);
         File destDir = new File(destinationDirectoryPath);
@@ -96,6 +244,32 @@ public class FileUtils {
 
         if (!file.delete()) {
             Log.e(TAG,"Error deleting file " + file.getName());
+        }
+    }
+
+    public static String getRNCodePath(Context context) {
+        String codePath = appendPathComponent(context.getFilesDir().getAbsolutePath(), FOLDER_RN);
+        return codePath;
+    }
+
+    public static String getPackageFolderPath(Context context,String packageHash) {
+        return appendPathComponent(getRNCodePath(context), packageHash);
+    }
+
+    public static String getCurrentPackageMd5(Context context) {
+        String statusFilePath = appendPathComponent(getRNCodePath(context), "code_rn.json");
+        String content = null;
+        try {
+            content = readFileToString(statusFilePath);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        if (content == null) {
+            return content;
+        } else {
+            content.replace('\n', ' ');
+            return content.trim();
         }
     }
 

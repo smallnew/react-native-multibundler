@@ -1,6 +1,8 @@
 const pathSep = require('path').sep;
-const plaformModules = require('./multibundler/platformMapping.json');
+const plaformModules = require('./multibundler/platformNameMap.json');
 const getModuleId = require('./multibundler/getModulelId').getModuleId;
+const useIndex = require('./multibundler/getModulelId').useIndex;
+
 let entry;
 
 function postProcessModulesFilter(module) {
@@ -22,7 +24,9 @@ function postProcessModulesFilter(module) {
       return true;
     }
     const name = getModuleId(projectRootPath,path);
-    if (plaformModules.indexOf(name) >= 0) {//这个模块在基础包已打好，过滤
+    if (useIndex && name < 100000) {//这个模块在基础包已打好，过滤
+      return false;
+    }else if(useIndex!==true && plaformModules.includes(name)){//使用模块名作为模块id的逻辑
       return false;
     }
   }

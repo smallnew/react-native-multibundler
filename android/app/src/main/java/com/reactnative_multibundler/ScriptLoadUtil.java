@@ -12,6 +12,7 @@ import com.facebook.react.ReactUtil;
 import com.facebook.react.bridge.BridgeUtil;
 import com.facebook.react.bridge.CatalystInstance;
 import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -81,6 +82,12 @@ public class ScriptLoadUtil {
             return null;
         }
         return context.getCatalystInstance();
+    }
+
+    public static void setJsBundleAssetPath(ReactContext reactContext,String bundleAssetPath){
+        reactContext
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit("sm-bundle-changed", bundleAssetPath);
     }
 
     @Nullable

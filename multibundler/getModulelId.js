@@ -9,6 +9,12 @@ var baseMappingPath;
 var buzMappingPath;
 
 /** 通过自增长的index来确定moduleID，优点是能使用rambundle且减小了bundle包的大小，隐藏了模块路径，提升安全性，缺点是需要保存和依赖已经打包进去的模块的路径和id的对应信息，需要注意打包顺序和重复依赖的打包模块*/
+/**
+ * projectRootPath:工程目录
+ * path:js模块路径
+ * entry:打包的入口
+ * isBuz:是否是业务包
+ * */
 function getModuleIdByIndex(projectRootPath,path,entry,isBuz){
 
   const moduleIdConfig = require('./ModuleIdConfig.json');
@@ -21,7 +27,9 @@ function getModuleIdByIndex(projectRootPath,path,entry,isBuz){
   if(baseModuleIdMap.length == 0){
     if(fs.existsSync(baseMappingPath)){
       baseModuleIdMap = require(baseMappingPath);
-      curModuleId = baseModuleIdMap[baseModuleIdMap.length-1].id;
+      if(baseModuleIdMap.length!=0) {
+	      curModuleId = baseModuleIdMap[baseModuleIdMap.length - 1].id;
+      }
     }
   }
   if(isBuz){
@@ -87,4 +95,4 @@ function getModuleId(projectRootPath,path,entry,isBuz){
 }
 
 
-module.exports={getModuleId}
+module.exports={getModuleId,useIndex}
