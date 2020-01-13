@@ -159,7 +159,7 @@ iOS和Android都有加载多bundle实例，经测试稳定可靠
 
 
 ### UI打包(现在支持mac os，windows)：
-     使用方式：到package-ui-bin目录解压需要的平台打包工具，双击解压后的可执行文件
+     使用方式：下载https://github.com/smallnew/RN-MultiBundler-UI，并根据项目中的readme来运行
      选择打包选项后点击打包,该方法可代替命令打包并帮助计算业务包依赖并去重
 <img src="https://github.com/smallnew/react-native-multibundler/raw/master/package-ui-demo.png" width="650" alt="Demo Android"></img>
 
