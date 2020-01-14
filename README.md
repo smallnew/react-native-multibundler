@@ -18,7 +18,8 @@ iOS和Android都有加载多bundle实例，经测试稳定可靠
 
      3、直接运行android或iOS项目，jsbundle包已经事先打好
      
-<img src="https://github.com/smallnew/react-native-multibundler/raw/master/demo.gif" width="250" alt="Demo Android"></img>
+<img src="https://github.com/smallnew/react-native-multibundler/raw/master/imgs/readme/demo-android.gif" width="250" alt="Demo Android"></img>
+<img src="https://github.com/smallnew/react-native-multibundler/raw/master/imgs/readme/demo-ios.gif" width="250" alt="Demo iOS"></img>
      
 
 ### 如何接入原有项目：
@@ -178,7 +179,7 @@ iOS和Android都有加载多bundle实例，经测试稳定可靠
 ### UI打包(现在支持mac os，windows)：
      使用方式：下载https://github.com/smallnew/RN-MultiBundler-UI，并根据项目中的readme来运行
      选择打包选项后点击打包,该方法可代替命令打包并帮助计算业务包依赖并去重
-<img src="https://github.com/smallnew/react-native-multibundler/raw/master/package-ui-demo.png" width="650" alt="Demo Android"></img>
+<img src="https://github.com/smallnew/react-native-multibundler/raw/master/imgs/readme/package-ui-demo.png" width="650" alt="Demo Android"></img>
 
 
 打包命令如下：
