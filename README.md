@@ -1,12 +1,12 @@
 # react-native-multibundler
-基于react native的metro bundler的配置化开发来处理分包，支持iOS和Android，metro bundler为官方打包的工具，使用官方分包方法更灵活稳定，比网上的一些方法更实用可靠。
+基于react native的metro bundler的配置化开发来处理分包，支持iOS和Android，支持远程加载，metro bundler为官方打包的工具，使用官方分包方法更灵活稳定，比网上的一些方法更实用可靠。
 
 支持debug、可选模块路径或者递增id作为模块id
 
 metro官方：https://facebook.github.io/metro/
 
 
-支持react native 0.57~0.60，由于采用的是官方metro拆包，理论上日后的rn版本无需修改就能兼容
+支持react native 0.57~0.61.5，由于采用的是官方metro拆包，理论上日后的rn版本无需修改就能兼容
 
 iOS和Android都有加载多bundle实例，经测试稳定可靠
 
@@ -98,8 +98,25 @@ iOS和Android都有加载多bundle实例，经测试稳定可靠
 1、比路径名作为moduleId更短，减小包大小
 2、打包后模块名得到保护
 3、可以使用debug模式打包，即打包命令中--dev可以为true,方便调试
-```
 
+```
+### 远程bundle加载
+```
+从v3.0之后加入了远程的bundle加载功能。
+使用步骤：
+1、打包远程包，远程包是一个zip压缩包，打包命令和普通的业务包的打包命令一致，
+最好修改保存bundle和assets的目录，这样压缩的时候直接在专门的目录压缩，打包后需自己手动将bundle压缩，
+压缩时要把bundle文件和assets放在第一级(即压缩包内不要有上层目录)
+2、把压缩的zip包放在网络上，重写AsyncReactActivity(Android)或者创建一个ReactController对象(iOS)，
+指定加载类型为network，并指定链接、模块名、bundle名
+3、启动这个Activity或者Controller就能将远程的业务包加载成功
+友情提示：
+1、该功能顺便把"不同业务包放在不同目录下的需求"给解决了，这个也归功于新的react-native-smartassets
+2、远程的bundle加载功能并没有做md5校验，这个需要开发者自己解决，主要由于md5主要还是需要服务端返回的信息，
+作为通用的拆包开源项目不会提供md5校验
+3、rn 0.62版本经测试会出现爆红的问题，主要是因为新增的LogBox模块擅自runApplication导致崩溃，不过RN的master分支已经添加了开关，后续是能够兼容的
+
+```
 ### js项目结构：
 
 ```
