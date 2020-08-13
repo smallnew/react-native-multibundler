@@ -6,7 +6,7 @@
 metro官方：https://facebook.github.io/metro/
 
 
-支持react native 0.57~0.61.5，由于采用的是官方metro拆包，理论上日后的rn版本无需修改就能兼容
+支持react native 0.57~0.63.2，由于采用的是官方metro拆包，理论上日后的rn版本无需修改就能兼容
 
 iOS和Android都有加载多bundle实例，经测试稳定可靠
 
