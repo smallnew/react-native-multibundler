@@ -8,6 +8,7 @@
 
 import React, {Component} from 'react';
 import {TouchableOpacity, Platform, StyleSheet, Text, View} from 'react-native';
+import 'react-native-gesture-handler'
 
 const instructions = '业务3打包的时候依赖了react-navigation，这里展示业务包依赖第三方模块的例子';
 

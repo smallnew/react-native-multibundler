@@ -73,7 +73,6 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-        entryFile: "index.js",
         enableHermes: false,  // clean and rebuild if changing
         bundleInRelease: false
 ]
@@ -162,6 +161,7 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";
         debugImplementation files(hermesPath + "hermes-debug.aar")

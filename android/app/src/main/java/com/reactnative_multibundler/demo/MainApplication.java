@@ -10,6 +10,12 @@ import com.facebook.soloader.SoLoader;
 import com.reactnative_multibundler.BuildConfig;
 import com.reactnative_multibundler.ScriptLoadUtil;
 import com.smallnew.smartassets.RNSmartassetsPackage;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+import com.swmansion.reanimated.ReanimatedPackage;
+import com.swmansion.rnscreens.RNScreensPackage;
+import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
+
+import org.reactnative.maskedview.RNCMaskedViewPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,7 +34,12 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-              new RNSmartassetsPackage()
+              new RNSmartassetsPackage(),
+              new RNCMaskedViewPackage(),
+              new RNGestureHandlerPackage(),
+              new ReanimatedPackage(),
+              new SafeAreaContextPackage(),
+              new RNScreensPackage()
       );
     }
 
