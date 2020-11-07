@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2015-present, Facebook, Inc.
- *
+ * <p>
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
 public abstract class AsyncReactActivity extends androidx.fragment.app.FragmentActivity
         implements DefaultHardwareBackBtnHandler, PermissionAwareActivity {
 
-    public enum ScriptType {ASSET,FILE,NETWORK}
+    public enum ScriptType {ASSET, FILE, NETWORK}
 
     private final ReactActivityDelegate mDelegate;
     protected boolean bundleLoaded = false;
@@ -51,9 +51,10 @@ public abstract class AsyncReactActivity extends androidx.fragment.app.FragmentA
      * This is used to schedule rendering of the component.
      * e.g. "MoviesApp"
      */
-    final private @Nullable String getMainComponentNameInner() {
-        if(!bundleLoaded &&
-                getBundle().scriptType==ScriptType.NETWORK){
+    final private @Nullable
+    String getMainComponentNameInner() {
+        if (!bundleLoaded &&
+                getBundle().scriptType == ScriptType.NETWORK) {
             return null;
         }
         return getMainComponentName();
@@ -67,13 +68,14 @@ public abstract class AsyncReactActivity extends androidx.fragment.app.FragmentA
      * Called at construction time, override if you have a custom delegate implementation.
      */
     protected ReactActivityDelegate createReactActivityDelegate() {
-        return new ReactActivityDelegate(this, getMainComponentNameInner());
+        return new ReactActivityDelegate(this, null);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final ReactInstanceManager manager = ((ReactApplication)getApplication()).getReactNativeHost().getReactInstanceManager();
+        mDelegate.onCreate(null);
+        final ReactInstanceManager manager = ((ReactApplication) getApplication()).getReactNativeHost().getReactInstanceManager();
         if (!manager.hasStartedCreatingInitialContext()
         ||ScriptLoadUtil.getCatalystInstance(getReactNativeHost())==null) {
             manager.addReactInstanceEventListener(new ReactInstanceManager.ReactInstanceEventListener() {
@@ -127,7 +129,7 @@ public abstract class AsyncReactActivity extends androidx.fragment.app.FragmentA
             ScriptLoadUtil.setJsBundleAssetPath(
                     reactInstanceManager.getCurrentReactContext(),
                     path);
-            initView();
+            mDelegate.loadApp(getMainComponentName());
         }
     }
 
@@ -151,7 +153,6 @@ public abstract class AsyncReactActivity extends androidx.fragment.app.FragmentA
             ScriptLoadUtil.loadScriptFromFile(scriptPath,instance,scriptPath,false);
             loadListener.onLoadComplete(true,scriptPath);
         }else if(pathType== ScriptType.NETWORK){
-            initView();
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
             dialogBuilder.setTitle("Loading jsBundle");
             dialogBuilder.setCancelable(false);
@@ -205,10 +206,6 @@ public abstract class AsyncReactActivity extends androidx.fragment.app.FragmentA
                 }
             });
         }
-    }
-
-    protected void initView(){
-        mDelegate.onCreate(null);
     }
 
     @Override
